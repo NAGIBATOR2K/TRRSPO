@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gcc tests.c -o test
+gcc test.c -o test
 ./test
