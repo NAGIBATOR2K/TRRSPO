@@ -1,0 +1,9 @@
+Package: maxfinder
+Version: 1.0
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: libc6
+Maintainer: Your Name <chatgpt@gmai.com>
+Description: Program to find maximum value in integer array
+ A simple CLI tool.
