@@ -1,0 +1,81 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential
+
+      - name: Build
+        run: ./build.sh
+        working-directory: ./cicd
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary
+          path: usr/bin/maxfinder
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt install -y build-essential
+
+      - name: Prepare binary
+        run: mkdir -p usr/bin
+
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: binary
+          path: usr/bin
+
+      - name: Run tests
+        run: ./test.sh
+        working-directory: ./cicd
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dpkg
+        run: sudo apt install -y dpkg-dev
+
+      - name: Prepare binary
+        run: mkdir -p usr/bin
+
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: binary
+          path: usr/bin
+
+      - name: Build deb
+        run: ./deploy.sh "../maxfinder.deb"
+        working-directory: ./cicd
+
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: maxfinder.deb
