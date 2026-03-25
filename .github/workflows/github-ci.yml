@@ -100,4 +100,4 @@ jobs:
         run: docker build -t maxfinder-image .
 
       - name: Run container
-        run: docker run --rm maxfinder-image
+        run: docker run --rm maxfinder-image sh -c "printf '5\n1 2 3 4 5\n' | /usr/bin/maxfinder"
