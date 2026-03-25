@@ -101,3 +101,12 @@ jobs:
 
       - name: Run container
         run: docker run --rm maxfinder-image sh -c "printf '5\n1 2 3 4 5\n' | /usr/bin/maxfinder"
+
+      - name: Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+  
+      - name: Tag
+        run: docker tag maxfinder-image ${{ secrets.DOCKER_USERNAME }}/maxfinder:latest
+  
+      - name: Push
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/maxfinder:latest
