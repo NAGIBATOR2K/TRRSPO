@@ -6,4 +6,6 @@ COPY maxfinder.deb /tmp/
 
 RUN dpkg -i /tmp/maxfinder.deb
 
+RUN chmod +x /usr/bin/maxfinder
+
 CMD ["/usr/bin/maxfinder"]
