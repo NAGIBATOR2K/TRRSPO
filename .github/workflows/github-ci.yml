@@ -82,3 +82,22 @@ jobs:
         with:
           name: deb-package
           path: maxfinder.deb
+
+  docker:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download deb package
+        uses: actions/download-artifact@v4
+        with:
+          name: deb-package
+          path: .
+
+      - name: Build Docker image
+        run: docker build -t maxfinder-image .
+
+      - name: Run container
+        run: docker run --rm maxfinder-image
